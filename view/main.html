@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de compras</title>
+</head>
+<body>
+    
+    <script>
+        function editRow(btn) {
+    
+    event.preventDefault();
+
+    // Pega a linha correspondente ao botão clicado
+    let row = btn.parentNode.parentNode;
+    let cells = row.getElementsByTagName("td");
+
+    
+    for (let i = 1; i < cells.length - 1; i++) {
+        let cell = cells[i];
+        let currentValue = cell.innerHTML;
+        cell.innerHTML = `<input type="text" value="${currentValue}">`;
+    }
+
+    // Altera o botão "Editar" para "Salvar"
+    btn.innerText = "Salvar";
+    btn.classList.add("save");
+    btn.classList.remove("edit");
+    btn.setAttribute("onclick", "saveRow(this)");
+}
+
+function deleteRow(btn) {
+    // Evita comportamento padrão de algum link ou submit
+    event.preventDefault();
+
+    // Remove a linha correspondente ao botão clicado
+    let row = btn.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+}
+
+function saveRow(btn) {
+    let row = btn.parentNode.parentNode;
+    let cells = row.getElementsByTagName("td");
+    fetch("http://localhost:8080/editar", {
+        method: "POST",
+        body: JSON.stringify({
+            id: cells[0].innerText,
+            produto: cells[1].getElementsByTagName("input")[0].value,
+            unidades: cells[2].getElementsByTagName("input")[0].value,
+            preco: cells[3].getElementsByTagName("input")[0].value
+        })
+    })
+
+    fetch("http://localhost:8080/", {
+        method: "GET"
+        
+    })
+    // Pega a linha correspondente ao botão clicado
+  
+
+    // Salva os valores editados e substitui os campos de texto pelos valores finais
+    for (let i = 1; i < cells.length - 1; i++) {
+        let input = cells[i].getElementsByTagName("input")[0];
+        cells[i].innerHTML = input.value;
+    }
+
+    // Altera o botão "Salvar" de volta para "Editar"
+    btn.innerText = "Editar";
+    btn.classList.add("edit");
+    btn.classList.remove("save");
+    btn.setAttribute("onclick", "editRow(this)");
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+            fetch("http://localhost:8080", {
+                method: "GET"
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Verifica se a resposta contém a lista de itens
+                const items = data.items; 
+                if (Array.isArray(items)) {
+                    // Seleciona o tbody da tabela
+                    const tbody = document.querySelector("tbody");
+                    // Limpa o tbody antes de adicionar novos dados
+                    tbody.innerHTML = '';
+                    
+                    // Preenche o tbody com dados dos itens
+                    items.forEach(item => {
+                        const tr = document.createElement("tr");
+
+                        const tdId = document.createElement("td");
+                        tdId.textContent = item.id;
+                        tr.appendChild(tdId);
+                        
+                        const tdNome = document.createElement("td");
+                        tdNome.textContent = item.nome; // Adapte conforme o formato do JSON
+                        tr.appendChild(tdNome);
+                        
+                        const tdUnidades = document.createElement("td");
+                        tdUnidades.textContent = item.unidades; // Adapte conforme o formato do JSON
+                        tr.appendChild(tdUnidades);
+                        
+                        const tdPreco = document.createElement("td");
+                        tdPreco.textContent = item.preco; // Adapte conforme o formato do JSON
+                        tr.appendChild(tdPreco);
+
+                        const tdEditExc = document.createElement("td");
+                        const btnEdit = document.createElement("button");
+                        const btnRemo = document.createElement("button");
+                        btnEdit.textContent = "Editar";
+                        btnRemo.textContent = "Excluir";
+                        btnEdit.onclick =  () => editRow(btnEdit);
+                        btnRemo.onclick = () => deleteRow(btnRemo);
+                        btnEdit.className = "btn edit";
+                        btnRemo.className = "btn delete";
+
+                        
+                        tdEditExc.appendChild(btnEdit);
+
+                        tdEditExc.appendChild(btnRemo);
+                        tr.appendChild(tdEditExc);
+
+                        
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    console.error('Dados inválidos recebidos do servidor');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+        });
+
+
+    </script>
+
+    <div class="principal">
+        <div class="adicionarItem">
+            <form>
+                <label for="produto">Produto:</label>
+                <input type="text" id="produto" name="produto"/>
+                <label for="unidades">Unidades:</label>
+                <input type="text" id="unidades" name="unidades"/>
+
+                <label for="preco">Preço</label>
+                <input type="text" id="preco" name="preco"/>
+
+                <button type="submit" title="Enviar">Enviar</button>
+            </form>
+        </div>
+
+  
+
+        <div class="lista-itens">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Produto</th>
+                        <th>Unidade</th>
+                        <th>Preço</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Maçã</td>
+                        <td>5</td>
+                        <td>3,00</td>
+                        <td>
+                            <button class="btn edit" onclick="editRow(this)">Editar</button>
+                            <button class="btn delete" onclick="deleteRow(this)">Excluir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</body>
+</html>
