@@ -28,7 +28,7 @@ public class App {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
         server.createContext("/edit", new EditHandler());
-        server.createContext("/post", new PostHandler());
+        server.createContext("/enviar", new PostHandler());
         server.createContext("/delete", new DeleteHandler());
         server.createContext("/", new GetHandler());
         server.createContext("/options", new OptionsHandler()); // Adicione este contexto
@@ -106,7 +106,22 @@ public class App {
                 exchange.sendResponseHeaders(200, -1); // Responde para OPTIONS
                 return;
             }
-            throw new UnsupportedOperationException("Unimplemented method 'handle'");
+            if("POST".equals(exchange.getRequestMethod())){
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8));
+                StringBuilder requestBody = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    requestBody.append(line);
+                }
+                System.out.println(requestBody);
+                String json = requestBody.toString();
+                String produto = extractValueFromJson(json, "produto");
+                int unidades = Integer.parseInt(extractValueFromJson(json, "unidades"));
+                double preco = Double.parseDouble(extractValueFromJson(json, "preco"));
+
+                lista.adicionarItem(new ItemDeCompra(produto, unidades, preco));
+            }
         }   
     }
 
@@ -119,7 +134,18 @@ public class App {
                 exchange.sendResponseHeaders(200, -1); // Responde para OPTIONS
                 return;
             }
-            throw new UnsupportedOperationException("Unimplemented method 'handle'");
+            if("POST".equals(exchange.getRequestMethod())){
+                BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8));
+                StringBuilder requestBody = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    requestBody.append(line);
+                }
+                System.out.println(requestBody);
+                String json = requestBody.toString();
+                int id = Integer.parseInt(extractValueFromJson(json, "id"));
+                lista.deletarItem(id);
+            }
         }   
     }
 

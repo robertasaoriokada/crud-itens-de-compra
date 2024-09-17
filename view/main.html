@@ -8,7 +8,20 @@
 <body>
     
     <script>
-        function editRow(btn) {
+
+function enviar(){
+    console.log("oi");
+    fetch("http://localhost:8080/enviar", {
+        method: "POST",
+        body: JSON.stringify({
+            produto: document.getElementById("produto").value,
+            unidades: document.getElementById("unidades").value,
+            preco: document.getElementById("preco").value
+        })
+    })
+}
+
+    function editRow(btn) {
     
     event.preventDefault();
 
@@ -36,7 +49,17 @@ function deleteRow(btn) {
 
     // Remove a linha correspondente ao botão clicado
     let row = btn.parentNode.parentNode;
+    let cells = row.getElementsByTagName("td");
     row.parentNode.removeChild(row);
+    
+
+    fetch("http://localhost:8080/delete", {
+        method: "POST",
+        body: JSON.stringify({
+            id: cells[0].innerText,
+           
+        })
+    })
 }
 
 function saveRow(btn) {
@@ -148,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label for="preco">Preço</label>
                 <input type="text" id="preco" name="preco"/>
 
-                <button type="submit" title="Enviar">Enviar</button>
+                <button type="submit" title="Enviar" onclick="enviar()">Enviar</button>
             </form>
         </div>
 
