@@ -129,7 +129,7 @@ function enviar(){
     for (let i = 1; i < cells.length - 1; i++) {
         let cell = cells[i];
         let currentValue = cell.innerHTML;
-        cell.innerHTML = <input type="text" value="${currentValue}">;
+        cell.innerHTML = `<input type="text" value="${currentValue}">`;
     }
 
     // Altera o botão "Editar" para "Salvar"
@@ -170,7 +170,7 @@ function saveRow(btn) {
             preco: cells[3].getElementsByTagName("input")[0].value
         })
     })
-    
+
     fetch("http://localhost:8080/", {
         method: "GET"
         
