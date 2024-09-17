@@ -4,6 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de compras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .principal {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .adicionarItem {
+            margin-bottom: 20px;
+        }
+
+        .adicionarItem label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .adicionarItem input {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .adicionarItem button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .adicionarItem button:hover {
+            background-color: #218838;
+        }
+
+        .lista-itens table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .lista-itens th, .lista-itens td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .lista-itens th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .lista-itens tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn.edit {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn.edit:hover {
+            background-color: #0056b3;
+        }
+
+        .btn.delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn.delete:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
 <body>
     
